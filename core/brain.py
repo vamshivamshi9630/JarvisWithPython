@@ -1,5 +1,7 @@
 import re
 from skills.chat import is_greeting, is_small_talk
+from ai.nlu import nlu, understand_command
+from ai.ml_intent import detect_intent
 
 # ---------- FILE OPEN PATTERNS ----------
 FILE_OPEN_PATTERNS = [
@@ -51,6 +53,9 @@ SYSTEM_CONTROLS = {
     "show bluetooth devices": ("list_bluetooth", None),
     "check bluetooth devices": ("list_bluetooth", None),
     "scan bluetooth": ("list_bluetooth", None),
+    "scan bluetooth devices": ("list_bluetooth", None),
+    "show available bluetooth": ("list_bluetooth", None),
+    "available bluetooth": ("list_bluetooth", None),
     
     # WiFi
     "wifi on": ("wifi", "on"),
@@ -62,8 +67,14 @@ SYSTEM_CONTROLS = {
     "list wifi": ("list_wifi", None),
     "list wifi networks": ("list_wifi", None),
     "show wifi networks": ("list_wifi", None),
+    "show available wifi": ("list_wifi", None),
+    "show available wifis": ("list_wifi", None),
+    "show available wifi networks": ("list_wifi", None),
+    "show available networks": ("list_wifi", None),
     "scan wifi": ("list_wifi", None),
     "available networks": ("list_wifi", None),
+    "list networks": ("list_wifi", None),
+    "show networks": ("list_wifi", None),
     
     # Volume
     "volume up": ("volume", "increase"),
@@ -107,9 +118,17 @@ SYSTEM_CONTROLS = {
     "airplane on": ("airplane", "on"),
     "airplane mode on": ("airplane", "on"),
     "enable airplane": ("airplane", "on"),
+    "turn on airplane": ("airplane", "on"),
+    "turn on aeroplane": ("airplane", "on"),
+    "turn on aeroplane mode": ("airplane", "on"),
+    "aeroplane mode on": ("airplane", "on"),
+    "aeroplane on": ("airplane", "on"),
     "airplane off": ("airplane", "off"),
     "airplane mode off": ("airplane", "off"),
     "disable airplane": ("airplane", "off"),
+    "turn off airplane": ("airplane", "off"),
+    "turn off aeroplane": ("airplane", "off"),
+    "aeroplane off": ("airplane", "off"),
 }
 
 # ---------- KNOWLEDGE PREFIXES (Goes to OpenAI) ----------
@@ -132,6 +151,32 @@ def understand(command: str):
         return {"intent": "unknown"}
 
     cmd = command.lower().strip()
+    
+    # FLEXIBLE SYNTAX: Support both "run cmd" and "cmd" syntax
+    # Try without "run" prefix if it exists
+    if cmd.startswith("run "):
+        # Extract command without "run" prefix
+        base_cmd = cmd[4:].strip()
+        base_command = command[4:].strip()  # Keep original case for some operations
+        
+        # Try understanding the base command
+        base_result = understand_base(base_cmd, base_command)
+        if base_result.get("intent") != "unknown":
+            return base_result
+    
+    # Try understanding as-is
+    return understand_base(cmd, command)
+
+
+def understand_base(cmd: str, command: str):
+    """
+    Base command understanding logic
+    Args:
+        cmd: lowercase stripped command
+        command: original command (preserving case where needed)
+    """
+    if not cmd:
+        return {"intent": "unknown"}
 
     # ---------- GREETINGS & CHAT ----------
     if is_greeting(cmd) or is_small_talk(cmd):
@@ -149,15 +194,37 @@ def understand(command: str):
     if cmd in SYSTEM_CMDS:
         action, _ = SYSTEM_CMDS[cmd]
         return {"intent": "system", "action": action}
+    
+    # Support for common system command variations
+    system_variations = {
+        "show files": ("ls", None),
+        "list files": ("ls", None),
+        "show current directory": ("pwd", None),
+        "list directory": ("ls", None),
+    }
+    
+    if cmd in system_variations:
+        action, _ = system_variations[cmd]
+        return {"intent": "system", "action": action}
 
     # ---------- CD / NAVIGATION ----------
-    if cmd.startswith(("cd ", "go to ", "run cd ")):
-        path = (
-            cmd.replace("run", "")
-               .replace("go to", "")
-               .replace("cd", "")
-               .strip()
-        )
+    if cmd.startswith(("cd ", "go to ", "run cd ", "navigate to ", "go into ")):
+        # Use NLU for better extraction
+        nlu_result = understand_command(cmd, "system")
+        path = None
+        
+        if "directory" in nlu_result["parsed_data"]:
+            path = nlu_result["parsed_data"]["directory"]
+        else:
+            # Fallback
+            path = (
+                cmd.replace("run", "")
+                   .replace("navigate to", "")
+                   .replace("go into", "")
+                   .replace("go to", "")
+                   .replace("cd", "")
+                   .strip()
+            )
         
         # Map common patterns
         path_map = {
@@ -185,47 +252,144 @@ def understand(command: str):
             }
 
     # ---------- OPEN FILE (DEFAULT EDITOR) ----------
-    if cmd.startswith("open ") and "." in cmd:
-        file_name = cmd.replace("open", "").strip()
-        return {
-            "intent": "open_file",
-            "file": file_name,
-            "app": None
-        }
+    if cmd.startswith(("open ", "show ", "view ", "read ", "edit ")) and "." in cmd:
+        file_name = None
+        # Use NLU to extract file name more intelligently
+        nlu_result = understand_command(cmd, "open_file")
+        if "file_name" in nlu_result["parsed_data"]:
+            file_name = nlu_result["parsed_data"]["file_name"]
+        else:
+            # Fallback parsing
+            for prefix in ["open ", "show ", "view ", "read ", "edit "]:
+                if cmd.startswith(prefix):
+                    file_name = cmd.replace(prefix, "").strip()
+                    break
+        
+        if file_name:
+            return {
+                "intent": "open_file",
+                "file": file_name,
+                "app": None
+            }
 
     # ---------- OPEN APPLICATION ----------
-    if cmd.startswith("open "):
-        target = cmd.replace("open", "").strip()
+    if cmd.startswith(("open ", "launch ", "run ", "start ")):
+        # Use NLU to extract app name intelligently
+        nlu_result = understand_command(cmd, "open_app")
+        target = None
         
-        # All open commands go to app_opener (it will handle smart detection)
-        return {"intent": "open_app", "target": target}
+        if "app_name" in nlu_result["parsed_data"]:
+            target = nlu_result["parsed_data"]["app_name"]
+        else:
+            # Fallback to original method
+            for prefix in ["open ", "launch ", "run ", "start "]:
+                if cmd.startswith(prefix):
+                    target = cmd.replace(prefix, "").strip()
+                    break
+        
+        if target:
+            return {"intent": "open_app", "target": target}
+    
+    # ---------- FUZZY MATCH APP NAMES (Handle typos like "ntepad++", "chrom", "vscod") ----------
+    from difflib import get_close_matches
+    from skills.app_opener import APP_COMMANDS
+    
+    # Try to match typos against known apps
+    cmd_lower = cmd.lower().strip()
+    close_matches = get_close_matches(cmd_lower, APP_COMMANDS.keys(), n=1, cutoff=0.70)
+    if close_matches:
+        # This looks like an app name with a typo
+        return {"intent": "open_app", "target": cmd}
 
     # ---------- CONNECT TO BLUETOOTH DEVICE ----------
-    if cmd.startswith(("connect to ", "connect device ", "pair with ")):
-        # Extract device name
-        device_name = cmd.replace("connect to", "").replace("connect device", "").replace("pair with", "").strip()
-        device_name = device_name.strip('"\'')  # Remove quotes if present
-        return {"intent": "system_control", "control": "connect_bluetooth", "device": device_name}
+    if cmd.startswith(("connect to ", "connect device ", "pair with ", "connect ", "pair ", "connect bluetooth to ", "connect to bluetooth ")):
+        # Use NLU to extract device name more intelligently
+        nlu_result = understand_command(cmd, "connect_device")
+        device_name = None
+        
+        if "device_name" in nlu_result["parsed_data"]:
+            device_name = nlu_result["parsed_data"]["device_name"]
+        else:
+            # Fallback to original method - remove all prefixes
+            device_name = cmd
+            for prefix in ["connect to bluetooth ", "connect bluetooth to ", "connect to ", "connect device ", "pair with ", "pair ", "connect "]:
+                if device_name.startswith(prefix):
+                    device_name = device_name[len(prefix):].strip()
+                    break
+            device_name = device_name.strip('"\'')
+        
+        if device_name:
+            return {"intent": "system_control", "control": "connect_bluetooth", "device": device_name}
     
     # ---------- CONNECT TO WIFI NETWORK ----------
-    if cmd.startswith(("connect to wifi ", "connect to network ", "connect wifi ")):
-        # Extract network name
-        network_name = cmd.replace("connect to wifi", "").replace("connect to network", "").replace("connect wifi", "").strip()
-        network_name = network_name.strip('"\'')  # Remove quotes if present
-        return {"intent": "system_control", "control": "connect_wifi", "network": network_name}
+    if cmd.startswith(("connect to wifi ", "connect to network ", "connect wifi ", "join wifi ", "join network ", "connect to ", "wifi to ")):
+        # Use NLU to extract network name more intelligently
+        nlu_result = understand_command(cmd, "connect_wifi")
+        network_name = None
+        
+        if "network_name" in nlu_result["parsed_data"]:
+            network_name = nlu_result["parsed_data"]["network_name"]
+        else:
+            # Fallback to original method - remove all prefixes
+            network_name = cmd
+            for prefix in ["connect to wifi ", "connect to network ", "connect wifi ", "join wifi ", "join network ", "connect to ", "wifi to ", "network to "]:
+                if network_name.startswith(prefix):
+                    network_name = network_name[len(prefix):].strip()
+                    break
+            network_name = network_name.strip('"\'')
+        
+        if network_name:
+            return {"intent": "system_control", "control": "connect_wifi", "network": network_name}
 
     # ---------- KNOWLEDGE QUERIES (Send to OpenAI) ----------
     # Check for knowledge prefixes or standalone topics
     if cmd.startswith(KNOWLEDGE_PREFIXES):
-        return {"intent": "knowledge", "query": command}
+        # Use NLU to clean up the query
+        nlu_result = understand_command(cmd, "knowledge")
+        query = nlu_result["parsed_data"].get("query", command)
+        return {"intent": "knowledge", "query": query}
     
     # Check for single/multi-word topics that aren't commands
     # Exclude very short system-like words and reserved commands
     excluded_words = {"cd", "ls", "dir", "pwd", "cls", "run", "go", "open", "exit", "help"}
     first_word = cmd.split()[0] if cmd else ""
     
-    if first_word and first_word not in excluded_words:
+    # Don't send very short strings (likely typos) to knowledge
+    # Only single/double letter combos or very short queries go to knowledge
+    is_likely_typo = len(cmd) < 4 and " " not in cmd
+    is_knowledge_like = any(prefix in cmd for prefix in ["what", "how", "why", "explain", "tell me", "search"])
+    
+    if first_word and first_word not in excluded_words and not is_likely_typo:
         # It's likely a knowledge query
-        return {"intent": "knowledge", "query": command}
+        if is_knowledge_like or len(cmd.split()) == 1:
+            return {"intent": "knowledge", "query": command}
+
+    # ML FALLBACK: Use machine learning to classify unknown commands
+    ml_result = detect_intent(command)
+    if ml_result["intent"] != "unknown" and ml_result["confidence"] >= 50:
+        # High confidence ML prediction
+        if ml_result["intent"] == "system":
+            # Try to extract action from ML context
+            cmd_lower = command.lower().strip()
+            if "run" in cmd_lower:
+                # Remove "run" prefix and try again
+                cleaned_cmd = cmd_lower.replace("run", "").strip()
+                if cleaned_cmd in SYSTEM_CMDS:
+                    action, _ = SYSTEM_CMDS[cleaned_cmd]
+                    return {"intent": "system", "action": action}
+            return {"intent": "system", "action": cmd_lower}
+        elif ml_result["intent"] == "open_app":
+            # Extract app name
+            app_name = cmd.replace("run", "").strip()
+            return {"intent": "open_app", "target": app_name}
+        elif ml_result["intent"] == "knowledge":
+            return {"intent": "knowledge", "query": command}
+        elif ml_result["intent"] == "system_control_connect":
+            if "bluetooth" in cmd.lower():
+                device = cmd.replace("connect", "").replace("pair", "").replace("with", "").strip()
+                return {"intent": "system_control", "control": "connect_bluetooth", "device": device}
+            else:
+                network = cmd.replace("connect", "").replace("join", "").replace("wifi", "").replace("network", "").strip()
+                return {"intent": "system_control", "control": "connect_wifi", "network": network}
 
     return {"intent": "unknown"}

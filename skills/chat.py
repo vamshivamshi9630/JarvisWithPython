@@ -3,6 +3,8 @@ Chat/Greeting module for JARVIS
 Handles casual conversations and greetings
 """
 
+from difflib import get_close_matches
+
 GREETINGS = {
     "hi": "Hey! How can I help you?",
     "hello": "Hello! What do you need?",
@@ -31,9 +33,17 @@ SMALL_TALK = {
 
 
 def is_greeting(text):
-    """Check if text is a greeting"""
+    """Check if text is a greeting (exact or fuzzy match)"""
     text_lower = text.lower().strip()
-    return text_lower in GREETINGS
+    
+    # Exact match first
+    if text_lower in GREETINGS:
+        return True
+    
+    # Fuzzy match for typos (e.g., "hlo" -> "hello")
+    # Use a higher threshold to avoid false positives like "what" -> "whats up"
+    close_matches = get_close_matches(text_lower, GREETINGS.keys(), n=1, cutoff=0.70)
+    return len(close_matches) > 0
 
 
 def is_small_talk(text):

@@ -2,6 +2,7 @@ import subprocess
 import platform
 import os
 import winreg
+from difflib import get_close_matches
 
 
 APP_COMMANDS = {
@@ -112,25 +113,33 @@ def find_app_in_path(app_name):
 
 
 def open_app(app_name: str):
-    """Open an application by name"""
+    """Open an application by name with typo correction"""
     app = app_name.lower().strip()
 
-    # Check hardcoded apps first
+    # Try exact match first
     if app in APP_COMMANDS:
         cmd = APP_COMMANDS[app]
     else:
-        # Try to find the app in registry
-        registry_path = find_app_in_registry(app)
-        if registry_path:
-            cmd = registry_path
+        # Try fuzzy matching for typos (80% similarity)
+        close_matches = get_close_matches(app, APP_COMMANDS.keys(), n=1, cutoff=0.80)
+        
+        if close_matches:
+            corrected_app = close_matches[0]
+            cmd = APP_COMMANDS[corrected_app]
+            app = corrected_app  # Use corrected name in messages
         else:
-            # Try to find in PATH
-            path_result = find_app_in_path(app)
-            if path_result:
-                cmd = path_result
+            # Try to find the app in registry
+            registry_path = find_app_in_registry(app)
+            if registry_path:
+                cmd = registry_path
             else:
-                # Try as direct executable
-                cmd = app
+                # Try to find in PATH
+                path_result = find_app_in_path(app)
+                if path_result:
+                    cmd = path_result
+                else:
+                    # Try as direct executable
+                    cmd = app
 
     try:
         if platform.system() == "Windows":
