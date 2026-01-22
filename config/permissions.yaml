@@ -1,0 +1,5 @@
+system:
+  shutdown: ask
+  reboot: ask
+files:
+  delete: ask

@@ -1,0 +1,6 @@
+pyyaml
+psutil
+speechrecognition
+sounddevice
+soundfile
+requests

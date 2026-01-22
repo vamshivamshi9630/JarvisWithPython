@@ -1,0 +1,6 @@
+provider: openai
+model: gpt-4o-mini
+temperature: 0.2
+
+# set this later as environment variable
+# OPENAI_API_KEY=xxxx
