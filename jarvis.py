@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """
-JARVIS - AI Personal Assistant
-Intelligently routes commands to local execution or OpenAI knowledge queries
+JARVIS - AI Personal Assistant (Fully Offline)
+
+Intelligently routes commands using local LLM planning and execution.
+Works completely offline after first run (model auto-downloads).
 """
 
 import os
 import sys
+import logging
 
 # ==================== ADMIN PRIVILEGE CHECK ====================
 def is_admin():
@@ -18,32 +21,64 @@ def is_admin():
 
 # Show warning if running without admin
 if not is_admin():
-    print("\n[!] JARVIS is running WITHOUT Administrator privileges.")
-    print("[*] WiFi and Bluetooth control will NOT work.")
-    print("[*] To enable full features:")
-    print("    - Windows: Run 'run_as_admin.vbs' (double-click)")
-    print("    - PowerShell: Right-click jarvis.py > 'Run as administrator'")
-    print("\n")
+    print("\n[!] JARVIS: Running without Administrator privileges.")
+    print("[*] WiFi control and some system features may not work.\n")
 
 # ==================== JARVIS STARTS HERE ====================
 
+# Setup logging - suppress most output by default
+logging.basicConfig(
+    level=logging.CRITICAL,  # Only show critical errors
+    format='%(message)s'
+)
+logger = logging.getLogger(__name__)
 
-# ==================== JARVIS STARTS HERE ====================
+# Import offline components
+from ai.local_llm import LocalLLM, get_local_llm
+from ai.planner import Planner
+from core.executor import execute_tool
+from core.orchestrator import Orchestrator
+from core.tool_registry import ToolRegistry
+from core.context import ContextManager
+from core.observer import Observer
 
-from core.brain import understand
-from core.executor import execute
+# Adapter for executor to work with orchestrator
+class ExecutorAdapter:
+    """Adapter for execute_tool function to work with orchestrator."""
+    
+    def execute_tool(self, tool_name: str, parameters: dict):
+        """Call pure executor function"""
+        return execute_tool(tool_name, parameters)
+    
+    def execute(self, action: dict):
+        """Execute structured action dict"""
+        from core.executor import execute
+        return execute(action)
 
-print("=" * 60)
-print("JARVIS - AI Personal Assistant")
-print("="*60)
-print("\nCommand Types:")
-print("  * System: ls, pwd, dir, cls")
-print("  * Navigation: cd users, go to c, go to ai")
-print("  * Apps: open chrome, open vscode, open notepad++")
-print("  * Files: open jarvis.py, open config.yaml in notepad++")
-print("  * Knowledge: flutter, what is flutter, explain python")
-print("\nType 'exit' to quit, 'help' for more info")
-print("=" * 60 + "\n")
+
+# Initialize system (suppress logs)
+try:
+    llm = get_local_llm()
+    tool_registry = ToolRegistry()
+    planner = Planner(tool_registry)
+    executor_adapter = ExecutorAdapter()
+    context_manager = ContextManager()
+    observer = Observer()
+    orchestrator = Orchestrator(
+        planner=planner,
+        executor=executor_adapter,
+        observer=observer,
+        context_manager=context_manager,
+        max_replans=2
+    )
+except Exception as e:
+    print(f"[ERROR] Failed to initialize: {e}")
+    sys.exit(1)
+
+print("JARVIS > Ready!")
+print("JARVIS > Type 'help' for commands or 'exit' to quit.\n")
+
+# ==================== MAIN LOOP ====================
 
 while True:
     try:
@@ -53,53 +88,37 @@ while True:
             continue
             
         if cmd.lower() == "exit":
-            print("[*] Goodbye!")
+            print("JARVIS > Goodbye!")
             break
             
         if cmd.lower() == "help":
             print("""
-JARVIS Help:
+JARVIS - Intelligent Assistant (Fully Offline)
 
-SYSTEM COMMANDS:
-  ls, dir, list          -> List files
-  pwd                    -> Current directory
-  cls, clear             -> Clear screen
-  
-NAVIGATION:
-  cd <path>              -> Change directory
-  go to <path>           -> Change directory
-  go to c                -> Go to C: drive
-  go to ai               -> Go to JARVIS folder
-  
-APPS:
-  open chrome            -> Open browser
-  open vscode            -> Open VS Code
-  open notepad++         -> Open Notepad++
-  open file explorer     -> Open File Explorer
-  
-FILES:
-  open <filename>        -> Open file
-  open <file> in <app>   -> Open with specific app
-  
-KNOWLEDGE QUERIES:
-  flutter                -> Ask about Flutter
-  what is <topic>        -> What is...
-  explain <topic>        -> Explain topic
-  how to <task>          -> How to do something
-  <topic>                -> Generic knowledge query
+Examples:
+  • hi, hello
+  • open chrome (simple commands)
+  • open chrome and search youtube for music (complex commands)
+  • lock screen, mute, get time
+  • what is python, explain machine learning
+  • prepare my pc for coding
+
+Type 'exit' to quit.
             """)
             continue
 
-        # Process command through AI
-        intent = understand(cmd)
-        result = execute(intent)
-
-        if result:
-            print(result)
+        # Process command through agent system
+        result_dict = orchestrator.process(cmd)
+        
+        # Display clean result
+        if result_dict.get("success"):
+            print(f"JARVIS > {result_dict.get('result', 'Done!')}\n")
+        else:
+            print(f"JARVIS > {result_dict.get('result', 'Sorry, I could not complete that.')}\n")
             
     except KeyboardInterrupt:
-        print("\n[*] Interrupted. Goodbye!")
+        print("\nJARVIS > Goodbye!")
         break
     except Exception as e:
-        print(f"[!] Error: {e}")
-
+        print(f"JARVIS > Error: {str(e)}\n")
+        logger.error(f"Error: {e}", exc_info=False)

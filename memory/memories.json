@@ -1,0 +1,55 @@
+{
+  "user_preferences": {
+    "favorite_font": {
+      "value": "Courier New",
+      "learned_at": "2026-02-19T11:59:51.925015"
+    }
+  },
+  "behavior_patterns": {
+    "test_sequence": [
+      {
+        "actions": [
+          "action1",
+          "action2"
+        ],
+        "timestamp": "2026-02-19T11:55:43.211643"
+      },
+      {
+        "actions": [
+          "action1",
+          "action2"
+        ],
+        "timestamp": "2026-02-19T11:59:51.938847"
+      }
+    ]
+  },
+  "tool_outcomes": {
+    "test_tool": [
+      {
+        "tool": "test_tool",
+        "task_type": "user_request",
+        "parameters": {},
+        "success": true,
+        "execution_time": 0.1,
+        "timestamp": "2026-02-19T11:55:43.228675"
+      },
+      {
+        "tool": "test_tool",
+        "task_type": "user_request",
+        "parameters": {},
+        "success": true,
+        "execution_time": 0.1,
+        "timestamp": "2026-02-19T11:59:51.953766"
+      }
+    ]
+  },
+  "phrase_mappings": {
+    "test command": {
+      "action": "test_tool",
+      "parameters": {},
+      "confidence": 0.8999999999999999,
+      "learned_at": "2026-02-19T11:59:51.967071"
+    }
+  },
+  "last_updated": "2026-02-19T11:59:51.967071"
+}

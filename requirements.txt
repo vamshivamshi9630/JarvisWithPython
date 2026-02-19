@@ -1,6 +1,45 @@
-pyyaml
-psutil
-speechrecognition
-sounddevice
-soundfile
-requests
+# Core AI/LLM
+ctransformers==0.2.27
+
+# Vector Memory & Embeddings
+faiss-cpu>=1.7.4
+sentence-transformers>=2.2.0
+numpy>=1.24.0
+
+# System & Hardware
+psutil==5.10.0
+pycaw==20.0.0
+screen-brightness-control==0.13.1
+pywifi==1.1.0
+speedtest-cli==2.1.3
+plyer==2.1.0
+win10toast==0.9
+
+# Input/Output Control
+pyautogui==0.9.53
+keyboard==0.13.5
+mouse==1.7.1
+pynput==1.7.6
+pydirectinput==1.0.4
+pyperclip==1.8.2
+
+# Audio/Voice
+pyaudio==0.2.13
+pyttsx3==2.90
+
+# Web & Automation
+selenium==4.15.2
+beautifulsoup4==4.12.2
+requests==2.31.0
+
+# Image & Display
+pillow==10.1.0
+mss==9.0.1
+opencv-python==4.8.1.78
+
+# Fuzzy Matching
+fuzzywuzzy==0.18.0
+python-Levenshtein==0.23.0
+
+# Utilities
+numpy==1.24.3

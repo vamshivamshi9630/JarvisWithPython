@@ -1,0 +1,39 @@
+{
+  "user_preferences": {
+    "favorite_font": {
+      "value": "Courier New",
+      "learned_at": "2026-02-19T11:55:43.199664"
+    }
+  },
+  "behavior_patterns": {
+    "test_sequence": [
+      {
+        "actions": [
+          "action1",
+          "action2"
+        ],
+        "timestamp": "2026-02-19T11:55:43.211643"
+      }
+    ]
+  },
+  "phrase_mappings": {
+    "test command": {
+      "action": "test_tool",
+      "parameters": {},
+      "confidence": 0.7,
+      "learned_at": "2026-02-19T11:55:43.251921"
+    }
+  },
+  "tool_outcomes": {
+    "test_tool": [
+      {
+        "tool": "test_tool",
+        "task_type": "user_request",
+        "parameters": {},
+        "success": true,
+        "execution_time": 0.1,
+        "timestamp": "2026-02-19T11:55:43.228675"
+      }
+    ]
+  }
+}

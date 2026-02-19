@@ -1,0 +1,786 @@
+"""
+================================================================================
+JARVIS - COMPLETE FEATURE GUIDE
+================================================================================
+
+All Windows PC Automation Features - How to Use Them
+(With fuzzy matching & typo tolerance)
+
+================================================================================
+1. APPLICATION CONTROL
+================================================================================
+
+Feature: Open any application
+How to use:
+  - "open chrome"
+  - "open notepad++"
+  - "open vscode"
+  - "open firefox"
+  - "open teams"
+  - "open discord"
+  - "open any-app-name"
+  
+Supported apps: chrome, firefox, edge, notepad++, vscode, python, node, cmd, powershell, 
+                discord, slack, teams, spotify, vlc, steam, git, blender, and 100+ more
+
+Feature: Close application
+How to use:
+  - "close chrome"
+  - "close notepad++"
+  - "close vscode"
+
+Feature: Kill process (force close)
+How to use:
+  - "kill chrome"
+  - "kill notepad"
+  - "kill process name"
+
+Feature: Check if app is running
+How to use:
+  - "is chrome running?"
+  - "check if vscode running"
+  - "is python running"
+
+Feature: List running processes
+How to use:
+  - "list processes"
+  - "show processes"
+  - "get running processes"
+
+Feature: Find heavy/resource-consuming apps
+How to use:
+  - "heavy processes"
+  - "which app using most CPU"
+  - "resource heavy processes"
+
+
+================================================================================
+2. FILE & FOLDER MANAGEMENT
+================================================================================
+
+Feature: Create file
+How to use:
+  - "create file test.txt"
+  - "new file document.txt"
+  - "create file path/to/file.txt"
+
+Feature: Create folder
+How to use:
+  - "create folder myfolder"
+  - "new folder documents"
+  - "create folder path/to/folder"
+
+Feature: Delete file
+How to use:
+  - "delete file test.txt"
+  - "delete document.txt"
+  - "delete path/to/file.txt"
+
+Feature: Delete folder
+How to use:
+  - "delete folder myfolder"
+  - "delete directory path/to/folder"
+
+Feature: Rename file
+How to use:
+  - "rename file old.txt to new.txt"
+  - "rename document.doc to report.doc"
+
+Feature: Copy file
+How to use:
+  - "copy file from source.txt to destination.txt"
+  - "copy C:\\file.txt to D:\\file.txt"
+
+Feature: Move file
+How to use:
+  - "move file from source.txt to destination"
+  - "move C:\\Downloads\\file.txt to C:\\Documents"
+
+Feature: List files in folder
+How to use:
+  - "list files"
+  - "list files in downloads"
+  - "show files in path/to/folder"
+
+Feature: Search for files
+How to use:
+  - "search files *.txt"
+  - "find files pdf"
+  - "search for document"
+
+Feature: Get file information
+How to use:
+  - "file info test.txt"
+  - "show file details document.pdf"
+
+Feature: Get disk space
+How to use:
+  - "disk space"
+  - "get disk C:"
+  - "disk usage"
+
+Feature: Open folder in explorer
+How to use:
+  - "open folder downloads"
+  - "open folder path/to/folder"
+  - "open directory"
+
+Feature: Clear temporary files
+How to use:
+  - "clear temp"
+  - "delete temp files"
+  - "clean temp"
+
+
+================================================================================
+3. SYSTEM INFORMATION & STATUS
+================================================================================
+
+Feature: Get CPU usage
+How to use:
+  - "cpu usage"
+  - "get cpu"
+  - "cpu"
+  Result: Shows CPU % and number of cores
+
+Feature: Get CPU temperature
+How to use:
+  - "cpu temperature"
+  - "get temp"
+  - "temperature"
+  - "temp"
+  Result: Shows CPU temperature in Celsius
+
+Feature: Get RAM usage
+How to use:
+  - "ram usage"
+  - "get ram"
+  - "memory"
+  - "ram"
+  Result: Shows RAM used / total (GB) and percentage
+
+Feature: Get disk usage
+How to use:
+  - "disk usage"
+  - "disk space"
+  - "get disk"
+  - "disk"
+  Result: Shows disk used/total and free space
+
+Feature: Get battery status
+How to use:
+  - "battery"
+  - "battery status"
+  - "battery entha?" (Telugu)
+  - "check battery"
+  Result: Shows battery %, charging status, time remaining
+
+Feature: Get OS information
+How to use:
+  - "os info"
+  - "system info"
+  - "os details"
+  Result: Shows Windows version, PC name, username, processor
+
+Feature: Get boot time
+How to use:
+  - "boot time"
+  - "when did pc start"
+  - "system boot"
+  Result: Shows last system boot time
+
+Feature: Get IP address
+How to use:
+  - "ip address"
+  - "get ip"
+  - "my ip"
+  - "ip"
+  Result: Shows local IP address
+
+Feature: Get complete system status
+How to use:
+  - "system status"
+  - "overall status"
+  - "pc status"
+  Result: Shows CPU, RAM, disk, battery all at once
+
+
+================================================================================
+4. POWER & HARDWARE CONTROL
+================================================================================
+
+Feature: Mute volume
+How to use:
+  - "mute"
+  - "mute volume"
+  - "turn off sound"
+
+Feature: Unmute volume
+How to use:
+  - "unmute"
+  - "unmute volume"
+  - "turn on sound"
+
+Feature: Set volume to specific level
+How to use:
+  - "volume 50"
+  - "set volume 75"
+  - "volume to 100"
+  Result: Sets volume to 0-100%
+
+Feature: Increase volume
+How to use:
+  - "volume up"
+  - "increase volume"
+  - "volume higher"
+  Result: Increases volume by 5%
+
+Feature: Decrease volume
+How to use:
+  - "volume down"
+  - "decrease volume"
+  - "volume lower"
+  Result: Decreases volume by 5%
+
+Feature: Set brightness to specific level
+How to use:
+  - "brightness 50"
+  - "set brightness 75"
+  - "brightness to 100"
+  Result: Sets brightness to 0-100%
+
+Feature: Increase brightness
+How to use:
+  - "brightness up"
+  - "increase brightness"
+  - "brightness higher"
+  Result: Increases brightness by 10%
+
+Feature: Decrease brightness
+How to use:
+  - "brightness down"
+  - "decrease brightness"
+  - "brightness lower"
+  Result: Decreases brightness by 10%
+
+Feature: Toggle WiFi
+How to use:
+  - "toggle wifi"
+  - "wifi on"
+  - "wifi off"
+
+Feature: Toggle airplane mode
+How to use:
+  - "airplane mode"
+  - "toggle airplane mode"
+  - "enable airplane mode"
+
+Feature: Lock screen
+How to use:
+  - "lock screen"
+  - "lock"
+  - "lock pc"
+
+Feature: Shutdown PC
+How to use:
+  - "shutdown"
+  - "shutdown pc"
+  - "turn off"
+
+Feature: Restart PC
+How to use:
+  - "restart"
+  - "restart pc"
+  - "reboot"
+
+
+================================================================================
+5. NETWORK & INTERNET CONTROL
+================================================================================
+
+Feature: Check internet connection
+How to use:
+  - "check internet"
+  - "internet connected"
+  - "is internet working"
+  Result: Shows if connected to internet
+
+Feature: Get current IP address
+How to use:
+  - "get ip"
+  - "my ip"
+  - "current ip"
+  Result: Shows public and local IP
+
+Feature: Get DNS information
+How to use:
+  - "dns info"
+  - "get dns"
+  - "hostname"
+  Result: Shows PC hostname and DNS
+
+Feature: Ping website
+How to use:
+  - "ping google.com"
+  - "ping facebook.com"
+  - "ping any-website.com"
+  Result: Tests connectivity to website
+
+Feature: Internet speed test
+How to use:
+  - "speed test"
+  - "test speed"
+  - "internet speed"
+  Result: Shows download and upload speed in Mbps
+
+Feature: Get connected WiFi name
+How to use:
+  - "wifi name"
+  - "get wifi"
+  - "connected wifi"
+  - "ssid"
+  Result: Shows connected WiFi network name
+
+Feature: Get network interfaces
+How to use:
+  - "network info"
+  - "network interfaces"
+  - "get network"
+  Result: Shows all network adapters info
+
+Feature: Get connected devices
+How to use:
+  - "connected devices"
+  - "devices on network"
+  - "who is connected"
+  Result: Shows all devices on network
+
+
+================================================================================
+6. CLIPBOARD CONTROL
+================================================================================
+
+Feature: Read clipboard
+How to use:
+  - "read clipboard"
+  - "get clipboard"
+  - "clipboard content"
+  Result: Shows what's copied in clipboard
+
+Feature: Write to clipboard
+How to use:
+  - "copy this text"
+  - "clipboard write hello world"
+  - "copy to clipboard"
+  Result: Copies text to clipboard
+
+Feature: Clear clipboard
+How to use:
+  - "clear clipboard"
+  - "empty clipboard"
+  Result: Clears all clipboard content
+
+Feature: Append to clipboard
+How to use:
+  - "append to clipboard text"
+  - "add to clipboard"
+  Result: Adds more text to existing clipboard
+
+Feature: Get clipboard length
+How to use:
+  - "clipboard length"
+  - "clipboard size"
+  Result: Shows how many characters in clipboard
+
+
+================================================================================
+7. NOTIFICATIONS & ALERTS
+================================================================================
+
+Feature: Show notification
+How to use:
+  - "notification title message"
+  - "show notification hello world"
+  Result: Shows Windows 10 toast notification
+
+Feature: Show alert dialog
+How to use:
+  - "alert hello"
+  - "show alert message"
+  Result: Shows pop-up alert dialog
+
+Feature: Show warning dialog
+How to use:
+  - "warning be careful"
+  - "show warning message"
+  Result: Shows warning dialog
+
+Feature: Show error dialog
+How to use:
+  - "error something failed"
+  - "show error message"
+  Result: Shows error dialog
+
+Feature: Ask question (yes/no)
+How to use:
+  - "question do you want to continue"
+  - "ask user message"
+  Result: Shows yes/no dialog
+
+Feature: Set reminder
+How to use:
+  - "reminder call mom in 30 seconds"
+  - "remind me in 5 seconds hello"
+  Result: Shows notification after delay
+
+
+================================================================================
+8. PROCESS MONITORING & CONTROL
+================================================================================
+
+Feature: List all running processes
+How to use:
+  - "list processes"
+  - "show running apps"
+  - "get processes"
+  Result: Shows all 400+ running processes
+
+Feature: Find specific process
+How to use:
+  - "find process chrome"
+  - "find process notepad"
+  - "find app name"
+
+Feature: Check if process is running
+How to use:
+  - "is chrome running"
+  - "check if python running"
+  - "running app"
+
+Feature: Kill process
+How to use:
+  - "kill chrome"
+  - "kill process name"
+  - "force close app"
+
+Feature: Get heavy processes
+How to use:
+  - "heavy processes"
+  - "which app using most CPU"
+  - "resource heavy"
+  Result: Top 5 most resource-consuming apps
+
+Feature: Get process details
+How to use:
+  - "process details chrome"
+  - "get info about process"
+  - "process info"
+
+
+================================================================================
+9. INPUT/KEYBOARD SIMULATION
+================================================================================
+
+Feature: Type text automatically
+How to use:
+  - "type hello world"
+  - "auto type message"
+  - "keyboard input text"
+
+Feature: Press key
+How to use:
+  - "press enter"
+  - "press escape"
+  - "press space"
+
+Feature: Keyboard shortcuts
+How to use:
+  - "press ctrl+c"         (copy)
+  - "press ctrl+v"         (paste)
+  - "press ctrl+z"         (undo)
+  - "press alt+tab"        (switch window)
+  - "press win+l"          (lock screen)
+  - "press print screen"   (screenshot)
+
+
+================================================================================
+10. MEDIA CONTROL
+================================================================================
+
+Feature: Play/pause media
+How to use:
+  - "play"
+  - "pause"
+  - "pause media"
+
+Feature: Stop media
+How to use:
+  - "stop"
+  - "stop media"
+
+Feature: Next track
+How to use:
+  - "next"
+  - "next track"
+  - "skip"
+
+Feature: Previous track
+How to use:
+  - "previous"
+  - "prev"
+  - "last track"
+
+
+================================================================================
+11. MULTI-STEP COMMANDS (COMBINING FEATURES)
+================================================================================
+
+You can combine multiple commands with "and":
+
+Examples:
+  - "open chrome and search youtube"
+  - "open notepad and type hello"
+  - "open notepad++ and new tab and type text"
+  - "volume 50 and brightness 75"
+  - "mute and lock screen"
+  - "open settings and change theme"
+
+
+================================================================================
+12. CHAT & CONVERSATION
+================================================================================
+
+Feature: Simple greetings
+How to use:
+  - "hi"
+  - "hello"
+  - "hey"
+  - "how are you"
+  - "thanks"
+
+Feature: Small talk
+How to use:
+  - "what are you"
+  - "who are you"
+  - "what can you do"
+
+
+================================================================================
+TYPO TOLERANCE & FUZZY MATCHING
+================================================================================
+
+JARVIS understands typos and variations:
+
+Examples that all work:
+  - "opne chrome" → Opens Chrome (typo: opne)
+  - "opne chrom" → Opens Chrome (typo: opne, missing e)
+  - "get batery" → Gets battery (typo: batery)
+  - "voume 50" → Sets volume (typo: voume)
+  - "note pad ++" → Opens Notepad++ (spacing variation)
+  - "broghtnessup" → Increases brightness (typo: broghtnessup)
+  - "get RAMm usage" → Gets RAM usage (typo: RAMm)
+
+
+================================================================================
+COMMON PATTERNS
+================================================================================
+
+Pattern 1: Check System Health
+  - "cpu usage"
+  - "ram usage"
+  - "disk space"
+  - "battery"
+  - "system status" (all at once)
+
+Pattern 2: File Operations
+  - "create file test.txt"
+  - "list files"
+  - "search files *.pdf"
+  - "delete old files"
+
+Pattern 3: Quick Fixes
+  - "clear temp"
+  - "kill heavy processes"
+  - "restart"
+  - "lock screen"
+
+Pattern 4: Network Check
+  - "check internet"
+  - "get ip"
+  - "speed test"
+  - "ping google.com"
+
+Pattern 5: Application Management
+  - "open chrome"
+  - "is notepad running"
+  - "close chrome"
+  - "list processes"
+
+
+================================================================================
+EXAMPLE CONVERSATIONS
+================================================================================
+
+Conversation 1: System Monitoring
+You > battery
+JARVIS > Battery: 85% | Charging | 3h 20m left
+
+You > cpu usage
+JARVIS > CPU usage: 45.2% (8 cores)
+
+You > ram
+JARVIS > RAM: 8.2GB / 16GB (51.2%)
+
+
+Conversation 2: File Management
+You > create file notes.txt
+JARVIS > Created file: notes.txt
+
+You > list files
+JARVIS > Found 15 items in current folder
+
+You > search files *.pdf
+JARVIS > Found 8 PDF files
+
+
+Conversation 3: App Control
+You > open chrome
+JARVIS > Opened chrome
+
+You > open notepad and type hello
+JARVIS > Opened notepad
+         Typed hello
+
+You > close notepad
+JARVIS > Closed notepad
+
+
+Conversation 4: PC Control
+You > volume 75
+JARVIS > Volume set to 75%
+
+You > brightness up
+JARVIS > Brightness increased to 60%
+
+You > lock screen
+JARVIS > Screen locked
+
+
+Conversation 5: Network
+You > check internet
+JARVIS > Internet is connected
+
+You > speed test
+JARVIS > Speed: 150.25 Mbps down / 25.30 Mbps up
+
+You > ping google.com
+JARVIS > google.com is online
+
+
+================================================================================
+INSTALLATION & SETUP
+================================================================================
+
+All dependencies are included in requirements.txt:
+  - psutil (system monitoring)
+  - pycaw (volume control)
+  - screen-brightness-control (brightness)
+  - pyautogui (keyboard/mouse)
+  - pyperclip (clipboard)
+  - plyer (notifications)
+  - speedtest-cli (internet speed)
+  - pywifi (WiFi control)
+  - And more...
+
+To run JARVIS:
+  python jarvis.py
+
+Type commands directly - fuzzy matching handles everything!
+
+
+================================================================================
+FEATURES BY PERFORMANCE
+================================================================================
+
+FASTEST (Instant):
+  - Volume/brightness control
+  - Mute/unmute
+  - Clipboard operations
+  - Lock screen
+  - Notifications
+
+FAST (~1 second):
+  - Open applications
+  - Close applications
+  - File operations
+  - Kill processes
+  - Get status info
+
+MEDIUM (~3-5 seconds):
+  - Internet speed test
+  - Ping websites
+  - Process listing (400+ processes)
+  - System scanning
+
+SLOW (~30+ seconds):
+  - Speed test (requires download)
+
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Issue: Some features not working
+Solution: Run as Administrator for full PC control
+
+Issue: Can't set volume
+Solution: Make sure audio drivers are installed
+
+Issue: WiFi toggle not working
+Solution: Admin privileges required
+
+Issue: Speed test slow
+Solution: Normal - requires actual download/upload test
+
+Issue: Process kill not working
+Solution: Some system processes can't be killed (protection)
+
+Issue: Brightness control not available
+Solution: Some laptops don't support brightness API
+
+
+================================================================================
+TIPS & TRICKS
+================================================================================
+
+Tip 1: Use partial app names
+  - "open not" → Opens Notepad++
+  - "open chr" → Opens Chrome
+  
+Tip 2: Don't worry about case
+  - "OPEN CHROME" works same as "open chrome"
+  
+Tip 3: Combine multiple commands
+  - "open chrome and volume 50 and brightness 75"
+  
+Tip 4: Use natural language
+  - "can you delete this file" → "delete file name"
+  - "please increase volume" → "volume up"
+  
+Tip 5: Quick shortcuts
+  - Type exact commands for instant execution
+  - Use partial words - fuzzy matching handles it
+
+
+================================================================================
+END OF FEATURE GUIDE
+================================================================================
+
+Total Features Implemented: 80+
+Total Commands Supported: 200+
+Typo Tolerance: YES
+Multi-step Commands: YES
+Offline Operation: YES
+
+For more info, type "help" in JARVIS
+"""
